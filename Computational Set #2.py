@@ -40,7 +40,7 @@ def parse(q):
 def graph3D(x_t, y_t, z_t, title):
     fig = plt.figure()
     ax = fig.gca(projection='3d')
-    
+
     ax.plot(x_t, y_t, z_t, lw=0.5)
     ax.set_title(title)
     
@@ -153,8 +153,8 @@ def graph3D(x_t, y_t, z_t, title):
 ##    return q_sol
 ##
 ##'Time points'
-##t_max = 500 # In seconds
-##n = 15000
+##t_max = 200 # In seconds
+##n = 20000
 ##t = np.linspace(0, t_max, n)
 
 
@@ -180,6 +180,7 @@ def graph3D(x_t, y_t, z_t, title):
 ##
 ##    ' Build Arrays to Plot '
 ##    parse(q_array)
+##    
 ##    ' Plot the the ouput'
 ##    graph3D(x_t, y_t, z_t, 'c = ' + str(i))
 
@@ -209,14 +210,18 @@ def graph3D(x_t, y_t, z_t, title):
 
 
     
-'NOT DONE (UNFINISHED)'
+'FINISHED'
 ######################################## PROBLEM 11.8 ########################################
 ##def duffing_oscillator(q, t, work):
 ##    ' q[0] = x_t '
-##    ' work[0] = alpha. work[1] = beta, work[2] = gamma,  work[3] = F , work(4) = w'
+##    ' work[0] = alpha. work[1] = beta, work[2] = gamma,  work[3] = F , work[4] = w'
 ##    cos = np.cos
+##
+##    x = q[0]
+##    dx_dt = q[1]
+##    alpha = work[0];  beta = work[1]; gamma = work[2]; F = work[3];  w = work[4]
 ##    
-##    dx_dt =  0
+##    dx_dt =  dx_dt
 ##    dv_dt =  F*cos(w*t) - beta*(x**3) - alpha*x - 2*gamma*dx_dt
 ##
 ##    q_sol = np.array([dx_dt, dv_dt])
@@ -224,116 +229,373 @@ def graph3D(x_t, y_t, z_t, title):
 ##
 ##'Time points'
 ##t_max = 100 # In seconds
-##n = 10000
+##n = 1000
 ##t = np.linspace(0, t_max, n)
 ##
+#################### PART a.) ##################
 ##' Initial Conditions '
-##x_t = 0
-##alpha = 1; beta = .2; gamma = 0; F = 4.0; w = 30
+##dx_dt = 0
+##x_0 = 0
+##alpha = 1; beta = .2; gamma = 0; F = 1.0#; w = 0
 ##'Build Arrays'
-##initial_conditions = np.array([x])
-##work = [alpha, beta, gamma, F, w]
-##' Run the 4th Order Runga Kutta algorithm to solve the differential equation '
-##runga_kutta_4(duffing_oscillator, t, initial_conditions,  work,  n)
+##initial_conditions = np.array([x_0, dx_dt])
 ##
+##w_points = np.linspace(0,6, 100)
+##A = []; w_values = []
 ##
-##' Build Arrays to Plot '
-##x_t = []
-##for i in range(0, n): x_t.append(q_array[i][1])
+##for j in w_points:
+##    w = j
+##    work = [alpha, beta, gamma, F, w]
+##    ' Run the 4th Order Runga Kutta algorithm to solve the differential equation '
+##    runga_kutta_4(duffing_oscillator, t, initial_conditions,  work,  n)
+##
+##    ' Build Arrays to Plot '
+##    x_t = []
+##    for i in range(0, n):
+##        x_t.append(q_array[i][1])
+##        
+##    A.append(max(x_t))
+##    w_values.append(w)
+##    #print(max(x_t))
 ##
 ##' Plot the the ouput'
 ###ax, fig = plt.figure()
-##plt.plot(x_t, t, lw=0.5)
+##plt.plot(w_values, A, lw=0.5)
+##plt.xlabel('\u03C9')
+##plt.ylabel('Amplitude')
+##plt.show()
+##
+##
+#################### PART b.) ##################
+##' Initial Conditions '
+##dx_dt = 0
+##x_0 = 0
+##alpha = 1; beta = .2; gamma = 0; w = 1.6
+##'Build Arrays'
+##initial_conditions = np.array([x_0, dx_dt])
+##
+##F_points = np.linspace(0, 100, 100)
+##A = []; F_values = []
+##
+##for j in F_points:
+##    F = j
+##    work = [alpha, beta, gamma, F, w]
+##    ' Run the 4th Order Runga Kutta algorithm to solve the differential equation '
+##    runga_kutta_4(duffing_oscillator, t, initial_conditions,  work,  n)
+##
+##    ' Build Arrays to Plot '
+##    x_t = []
+##    for i in range(0, n):
+##        x_t.append(q_array[i][1])
+##        
+##    A.append(max(x_t))
+##    F_values.append(F)
+##    #print(max(x_t))
+##
+##'Plot the the ouput'
+###ax, fig = plt.figure()
+##plt.plot(w_values, A, lw=0.5)
+##plt.title('\u03C9 = ' + str(w))
+##plt.xlabel('Force')
+##plt.ylabel('Amplitude')
 ##plt.show()
 
 
 ######################################## PROBLEM 11.12 ########################################
 
+def graph2D(center, x, y, p_x, p_y, title):
+    fig, ax = plt.subplots(1)
+    ax.plot(x, y, linewidth = .5)
+    ax.scatter(p_x, p_y, s=1)
+
+    ax.set_aspect(1)
+    ax.set_xlim([center[0] - 10, center[0] + 10])
+    ax.set_ylim([center[1] - 10, center[1] + 10])
+    ax.set_title(title)
+    plt.show()
+
+def dist(x1, y1, x2, y2):
+    return np.sqrt((x2-x1)**2 + (y2-y1)**2)
+
 ################## PART a.) ##################
-' Setting the center point in the grid '
-##center_point_pos_x = 50
-##center_point_pos_y = 50
+##' Setting the center point in the grid '
+####center_point_pos_x = 50
+####center_point_pos_y = 50
+####
+####' Creating the grid ' 
+####nx, ny = 10, 10
+##a = 1
+####x_limit = a*nx
+####y_limit = a*ny
+####
+####' Setting it up in python '
+#####x = np.linspace(-x_limit, x_limit, nx)
+#####y = np.linspace(-y_limit, y_limit, ny)
+####
+####x = np.zeros(x_limit)
+####y = np.zeros(y_limit)
+####X, Y = np.meshgrid(x, y)
+####
+####print(X)
 ##
-##' Creating the grid ' 
-##nx, ny = 10, 10
-a = 1
-##x_limit = a*nx
-##y_limit = a*ny
+#################### PART b.) ##################
+##'Set the central particle  in x, y coordinates' 
+##particles_x = [50]
+##particles_y = [50]
 ##
-##' Setting it up in python '
-###x = np.linspace(-x_limit, x_limit, nx)
-###y = np.linspace(-y_limit, y_limit, ny)
+##check = 're-roll'
+##' Generate a particle at a random position that is no the center '
+##while check == 're-roll':
+##    rand_x = random.randint(0, 100) # 'replace with nx'
+##    rand_y = random.randint(0, 100) # 'replace with ny'
 ##
-##x = np.zeros(x_limit)
-##y = np.zeros(y_limit)
-##X, Y = np.meshgrid(x, y)
+##    if ((rand_x in particles_x) and (rand_y in particles_y)):
+##        check = 're-roll'
+##    else:
+##        check = 'continue'
 ##
-##print(X)
+##particles_x.append(rand_x)
+##particles_y.append(rand_y)
+##
+##particles_x[1] = 51
+##particles_y[1] = 50
+##print(particles_x[1], particles_y[1])
+##
+##'Allow the particle to randomly move until adjacent to center or out of the grid'
+##while True: # (particles_x[1] <= 100 and particles_y[1] <= 100) and (particles_x[1] != 50 + a or particles_y[1] != 50 + a):
+##
+##    'The case the particle exits the grid'
+##    if (particles_x[1] < 0 or particles_x[1] > 100 or particles_y[1] < 0 or particles_y[1] > 100):
+##        print(particles_x[1], particles_y[1])
+##        sys.exit('Particle exited the grid')
+##
+##    'Check if the particle becomes adjacent to the central particle'
+##    if ((particles_x[1] == 50 + a or particles_x[1] == 50 - a) and particles_y[1] == 50) or ((particles_y[1] == 50 + a or particles_y[1] == 50 - a) and particles_x[1] == 50):
+##
+##        'Plot particles'
+##        max_x = max(particles_x); min_x = min(particles_x)
+##        max_y = max(particles_y); min_y = min(particles_y)
+##
+##        center = [(max_x + min_x)/2, (max_y + min_y)/2]
+##        print(center)
+##
+##        'Calculate r_min'
+##        distance = []
+##        for j in range(1, len(particles_x)):
+##            distance.append(np.sqrt((particles_x[j] - particles_x[0])**2 + (particles_y[j] - particles_y[0])**2))
+##        r_min = max(distance)
+##        print(r_min)
+##
+##        'Plot circle around the particles and calculate R_min'
+##        # theta goes from 0 to 2pi
+##        theta = np.linspace(0, 2*np.pi, 100)
+##        # the radius of the circle
+##        r = r_min
+##        # compute x1 and x2
+##        x1 = r*np.cos(theta) + center[0]
+##        x2 = r*np.sin(theta) + center[1]
+##        # create the circle
+##        graph2D(center, x1, x2, particles_x, particles_y, 'x = ' + str(particles_x[1]) + ', y = ' + str(particles_y[1]))
+##        
+##        print('R_min: ' + str(r))
+##        
+##        'Exit the program'
+##        sys.exit('x = ' + str(particles_x[1]) + ', y = ' + str(particles_y[1]))
+##
+##
+##    'Performing the random movement'
+##    # movement in the x or y direction 
+##    rand_move = random.randint(0, 1)
+##    # movement is positive or negative direction 
+##    rand_dir = random.randint(0, 1)
+##
+##    'Determining which way the particle will move' 
+##    if rand_move == 0:
+##        if rand_dir == 0: particles_x[1] = particles_x[1] - 1
+##        else: particles_x[1] = particles_x[1] + 1
+##        
+##    if rand_move == 1:
+##        if rand_dir == 0: particles_y[1] = particles_y[1] - 1
+##        else: particles_y[1] = particles_y[1] + 1
 
-################## PART b.) ##################
-' Particles is written in x, y coordinates ' 
-particles_x = [50]
-particles_y = [50]
 
-check = 're-roll'
-' Generate a particle at a random position that is no the center '
-while check == 're-roll':
-    rand_x = random.randint(0, 100) # 'replace with nx'
-    rand_y = random.randint(0, 100) # 'replace with ny'
 
-    if ((rand_x in particles_x) and (rand_y in particles_y)):
-        check = 're-roll'
-    else:
-        check = 'continue'
 
-particles_x.append(rand_x)
-particles_y.append(rand_y)
-
-print(particles_x[1], particles_y[1])
-
-' Allow the particle to randomly move until adjacent to center or out of the grid '
-while (particles_x[1] <= 100 and particles_y[1] <= 100) and (particles_x[1] != 50 + a or particles_y[1] != 50 + a):
-    ' movement in the x or y direction '
-    rand_move = random.randint(0, 1)
-    ' movement is positive or negative direction ' 
-    rand_dir = random.randint(0, 1)
-
-    ' Determining which way the particle will move ' 
-    if rand_move == 0:
-        if rand_dir == 0: particles_x[1] = particles_x[1] - 1
-        else: particles_x[1] = particles_x[1] + 1
+################## PART c.) ##################
+##'Particles is written in x, y coordinates' 
+##particles_x = [51, 50, 50]
+##particles_y = [50, 51, 49]
+##
+##'The spacing of the lattice points'
+##a = 1
+##
+##' Set the number of particles to be generated '
+##N = 25
+##
+##for i in range(1, N):
+##    check = 're-roll'
+##    'Generate a particle at a unique random position'
+##    while check == 're-roll':
+##        rand_x = random.randint(0, 100) # 'replace with nx'
+##        rand_y = random.randint(0, 100) # 'replace with ny'
+##
+##        if ((rand_x in particles_x) and (rand_y in particles_y)):
+##            check = 're-roll'
+##        else:
+##            check = 'continue'
+##
+##    particles_x.append(rand_x)
+##    particles_y.append(rand_y)
+##
+##
+##'Create two lists to set the particles that leave the grid or become adjacent to cluster'
+##exited_particles = []
+##stopped_particles = [(50,50)]
+##
+##'Allow the particle to randomly move until adjacent to center or out of the grid'
+##while (len(particles_x) != 0 and len(particles_y) != 0) :
+##    size = len(particles_x)
+##    'Check if the particle becomes adjacent to any of the stopped particles'
+##    for i in range(0, size):
+##        for j in range(len(stopped_particles)):
+##            if dist(particles_x[i], particles_y[i], stopped_particles[j][0], stopped_particles[j][1]) == a:
+##                print(particles_x[i], particles_y[i])
+##                stopped_particles.append((particles_x[i], particles_y[i]))
+##                particles_x[i] = 'del'
+##                particles_y[i] = 'del'
+##                break
+##
+##    for i in range(0, size):
+##        if (particles_x[i] != 'del' and particles_y[i] != 'del'):
+##            'Performing the random movement of the particles'
+##            # movement in the x or y direction 
+##            rand_move = random.randint(0, 1)
+##            # movement is positive or negative direction 
+##            rand_dir = random.randint(0, 1)
+##
+##            'Setting which way the particle will move' 
+##            if rand_move == 0:
+##                if rand_dir == 0: particles_x[i] = particles_x[i] - 1
+##                else: particles_x[i] = particles_x[i] + 1
+##                
+##            if rand_move == 1:
+##                if rand_dir == 0: particles_y[i] = particles_y[i] - 1
+##                else: particles_y[i] = particles_y[i] + 1
+##
+##    'Check if the case the particle exits the grid'
+##    for i in range(0, size):
+##        if (particles_x[i] != 'del' and particles_y[i] != 'del'):
+##            if (particles_x[i] < 0 or particles_x[i] > 100 or particles_y[i] < 0 or particles_y[i] > 100):
+##                exited_particles.append((particles_x[i], particles_y[i]))
+##                particles_x[i] = 'del'
+##                particles_y[i] = 'del'
+##
+##    'Remove particles that have stopped or exited the grid'
+##    if ('del' in particles_x and 'del' in particles_y):
+##        particles_x = [p for p in particles_x if p != 'del']
+##        particles_y = [p for p in particles_y if p != 'del']
+##
+##
+##print(particles_x, particles_y)
+##print(exited_particles)
+##print(stopped_particles)
+##
+##
+##
+##p_x =[]; p_y = []
+##for i in range(0,len(stopped_particles)):
+##    p_x.append(stopped_particles[i][0])
+##    p_y.append(stopped_particles[i][1])
+##    
+##'Get the maximum and minimum of x, y values of the stopped particles'
+##max_x = max(p_x); min_x = min(p_x)
+##max_y = max(p_y); min_y = min(p_y)
+##
+##'Calculate center of cluster'
+##center = [(max_x + min_x)/2, (max_y + min_y)/2]
+##print(center)
+##
+##'Calculate r_min'
+##distance = []
+##for j in range(1, len(stopped_particles)):
+##    distance.append(dist(p_x[j], p_y[j], p_x[0], p_y[0]))
+##r_min = max(distance)/2
+##
+##
+##'Plot circle around the particles and calculate R_min'
+### theta goes from 0 to 2pi
+##theta = np.linspace(0, 2*np.pi, 100)
+### the radius of the circle
+##r = r_min
+### compute x1 and x2
+##x1 = r*np.cos(theta) + center[0]
+##x2 = r*np.sin(theta) + center[1]
+### create the circle
+##graph2D(center, x1, x2, p_x, p_y, 'Multiple Particles')
+##        
+##print('R_min: ' + str(r))            
         
-    if rand_move == 1:
-        if rand_dir == 0: particles_y[1] = particles_y[1] - 1
-        else: particles_y[1] = particles_y[1] + 1
 
-    ' The case the particle exits the grid '
-    if (particles_x[1] < 0 or particles_x[1] > 100 or particles_y[1] < 0 or particles_y[1] > 100):
-        print(particles_x[1], particles_y[1])
-        #print( 'Particle exited the grid')
-        sys.exit('Particle exited the grid')
 
-    ' The particle becomes adjacent '
-    if (particles_x[1] == 50 + a or particles_y[1] == 50 + a): 
-        #print(particles_x[1], particles_y[1])
-        'Calculate circle around the particle and call it R_min'
 
-        'Exit the program'
-        sys.exit('x = ' + str(particles_x[1]) + ', y = ' + str(particles_y[1]))
-
-    #print(particles_x[1], particles_y[1])    
+#################### PART d.) ##################
+##' Calculate Fractal Dimension using R_min from part c.) '
+##ln = np.log
+##
+##D = ln(N)/ln(R_min)
 
 ######################################## PROBLEM 11.5 ########################################
 
+def recursive_func(b, y):
+    return 1 - b*y**2
+
+fig, ax = plt.subplots()
+
+'Simulate system for 10000 values of a linearly spaced between 0 and 2'
+n = 10000
+b = np.linspace(0, 2, n)
+
+'initial condition of system'
+y = 1e-5 * np.ones(n)
+'number of iterations of system'
+iterations = 1000
+'we are going to keep last 100 iterations'
+last = 100
+
+for i in range(iterations):
+    y = recursive_func(b, y)
+    # We display the bifurcation diagram.
+    if i >= (iterations - last):
+        ax.plot(b, y, ',k', alpha=.25)
+
+ax.set_xlabel('b')
+ax.set_xlabel('y')
+ax.set_title('Bifurcation Diagram for the system: ' + 'yₙ₊₁ = 1 - bₙyₙ²')
+plt.show()    
 
 
+########## for the logistic equation ########## 
+def logistic(a, x):
+    return a*x*(1 - x)
 
-
-
-
-
-
-
-
-
+##fig, ax = plt.subplots()
+##
+##'Simulate system for 10000 values of a linearly spaced between 2 and 4
+##n = 10000
+##a = np.linspace(2, 4, n)
+##
+##'initial condition of system'
+##x = 1e-5 * np.ones(n)
+##'number of iterations of system'
+##iterations = 1000
+##'we are going to keep last 100 iterations'
+##last = 100
+##
+##for i in range(iterations):
+##    x = logistic(a, x)
+##    # We display the bifurcation diagram.
+##    if i >= (iterations - last):
+##        ax.plot(a, x, ',k', alpha=.25)
+##
+##plt.show()    
 
